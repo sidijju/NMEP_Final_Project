@@ -55,6 +55,7 @@ def get_max_words(data):
         if len(data.iloc[i]) > max_words:
             max_words = len(data.iloc[i])
 
+    print(max_words)
     return max_words
 
 def get_dataset():
