@@ -10,22 +10,13 @@ import matplotlib.pyplot as plt
 
 from torch.autograd import Variable
 from torchvision import transforms
-from torchsummary import summary
+#from torchsummary import summary
 from torch.utils.data.dataset import Dataset
 
-import model as Model
-import data
+from model import Model
+from data import DataTrain, DataTest
 
-parser = argparse.ArgumentParser(description='Configuration details for training/testing genre classifier')
-parser.add_argument('--config', type=str, required=True)
-parser.add_argument('--train', action='store_true')
-parser.add_argument('--data_dir', type=str, required=True)
-parser.add_argument('--image', type=str)
-parser.add_argument('--model_number', type=str, required=True)
-
-args = parser.parse_args()
-
-config = yaml.load(open(args.config, 'r'), Loader=yaml.FullLoader)
+config = yaml.load(open('config.yaml', 'r'), Loader=yaml.FullLoader)
 
 def train(train_loader, model, criterion, optimizer, epoch):
     model.train()
@@ -42,10 +33,10 @@ def train(train_loader, model, criterion, optimizer, epoch):
                 correct += 1
             total += 1
 
-        #if i % 100 == 0:
-        #    print("loss: ", loss.item())
-        #    print("label: ", target[0].item())
-        #    print("predicted: ", predicted[0].item())
+        if i % 100 == 0:
+            print("loss: ", loss.item())
+            print("label: ", target[0].item())
+            print("predicted: ", predicted[0].item())
 
         loss.backward()
         optimizer.step()
@@ -79,22 +70,24 @@ def save_checkpoint(state, best_one, filename='genre_checkpoint.pth.tar', filena
         shutil.copyfile(filename, filename2)
 
 n_epochs = config["num_epochs"]
-model =
+training_size = config["training_size"]
+num_classes = config["num_classes"]
+model = Model(num_classes)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(),
                       lr=config["learning_rate"],
                       momentum=config["momentum"],
                       weight_decay=config["weight_decay"])
-train_dataset =
+train_dataset = DataTrain(training_size)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True)
-val_dataset =
+val_dataset = DataTest(training_size)
 val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=config["batch_size"], shuffle=True)
 
 best_loss = 1
 for epoch in range(n_epochs):
      train_loss, train_acc = train(train_loader, model, criterion, optimizer, config["num_epochs"])
      val_loss, val_acc = validate(val_loader, model, criterion)
- 	 #TODO: Save your checkpoint
+ 	 # Save checkpoint
      best_one = val_loss < best_loss
      save_checkpoint(model.state_dict(), best_one)
      print("Epoch %d - Train Accuracy: %2.4f, Validation Accuracy: %2.4f" % (epoch, train_acc, val_acc))

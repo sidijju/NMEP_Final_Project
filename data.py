@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import nltk
 from nltk.stem import WordNetLemmatizer
+from torch.utils.data.dataset import Dataset
+import sklearn
+import torch
 
 vocab_size = 1000
 
@@ -55,7 +58,6 @@ def get_max_words(data):
         if len(data.iloc[i]) > max_words:
             max_words = len(data.iloc[i])
 
-    print(max_words)
     return max_words
 
 def get_dataset():
@@ -67,13 +69,21 @@ def get_dataset():
     lyrics = dataset['lyrics']
 
     genre_values = dict() # contains how many of each genre there are
+    genre_indicies = dict()
     for index, value in genre.items():
         if value not in genre_values:
+            genre_indicies[value] = len(genre_values)
             genre_values[value] = 0
+            
         genre_values[value] += 1
 
     # One-hot encode
-    genre = pd.get_dummies(genre)
+    #genre = pd.get_dummies(genre)
+
+    #print(genre_indicies)
+    genre_labels = []
+    for i in range(len(genre)):
+        genre_labels.append(genre_indicies[genre[i]])
 
     # lemmatize lyrics
     lyrics = lemmatize(lyrics)
@@ -95,6 +105,38 @@ def get_dataset():
             song.append(get_word_value(word, vocab_dict))
         preprocessed_lyrics.append(song)
 
-    return preprocessed_lyrics
+    
+    #print(genre_labels)
+    preprocessed_lyrics, genre_labels = sklearn.utils.shuffle(preprocessed_lyrics, genre_labels)
+
+    #print(np.array(preprocessed_lyrics).shape)
+    #print(np.array(genre_labels).shape)
+    #print(genre_labels)
+
+    return (preprocessed_lyrics, genre_labels)
 
 get_dataset()
+
+class DataTrain(Dataset):
+    def __init__(self, training_size):
+        (self.data, self.labels) = get_dataset()
+        self.data = self.data[0:int(len(self.data)*training_size)]
+        self.labels = self.labels[0:int(len(self.labels)*training_size)]
+
+    def __getitem__(self, index):
+        return (torch.tensor(self.data[index]), self.labels[index])
+    
+    def __len__(self):
+        return len(self.data)
+
+class DataTest(Dataset):
+    def __init__(self, training_size):
+        (self.data, self.labels) = get_dataset()
+        self.data = self.data[int(len(self.data)*training_size):]
+        self.labels = self.labels[int(len(self.labels)*training_size):]
+
+    def __getitem__(self, index):
+        return (torch.tensor(self.data[index]), self.labels[index])
+    
+    def __len__(self):
+        return len(self.data)

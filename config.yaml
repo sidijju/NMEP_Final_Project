@@ -1,0 +1,7 @@
+batch_size : 512
+weight_decay : 0.0005
+momentum: 0.9
+learning_rate : 0.1
+num_epochs: 100
+num_classes: 7
+training_size: 0.7
