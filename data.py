@@ -74,7 +74,7 @@ def get_dataset():
         if value not in genre_values:
             genre_indicies[value] = len(genre_values)
             genre_values[value] = 0
-            
+
         genre_values[value] += 1
 
     # One-hot encode
@@ -105,7 +105,6 @@ def get_dataset():
             song.append(get_word_value(word, vocab_dict))
         preprocessed_lyrics.append(song)
 
-    
     #print(genre_labels)
     preprocessed_lyrics, genre_labels = sklearn.utils.shuffle(preprocessed_lyrics, genre_labels)
 
@@ -119,24 +118,24 @@ get_dataset()
 
 class DataTrain(Dataset):
     def __init__(self, training_size):
-        (self.data, self.labels) = get_dataset()
+        self.data, self.labels = get_dataset()
         self.data = self.data[0:int(len(self.data)*training_size)]
         self.labels = self.labels[0:int(len(self.labels)*training_size)]
 
     def __getitem__(self, index):
-        return (torch.tensor(self.data[index]), self.labels[index])
-    
+        return torch.tensor(self.data[index]), self.labels[index]
+
     def __len__(self):
         return len(self.data)
 
 class DataTest(Dataset):
     def __init__(self, training_size):
-        (self.data, self.labels) = get_dataset()
+        self.data, self.labels = get_dataset()
         self.data = self.data[int(len(self.data)*training_size):]
         self.labels = self.labels[int(len(self.labels)*training_size):]
 
     def __getitem__(self, index):
-        return (torch.tensor(self.data[index]), self.labels[index])
-    
+        return torch.tensor(self.data[index]), self.labels[index]
+
     def __len__(self):
         return len(self.data)

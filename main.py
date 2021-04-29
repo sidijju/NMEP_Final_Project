@@ -1,19 +1,20 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-import time
+#import time
 import shutil
 import yaml
 import argparse
 import matplotlib.pyplot as plt
 
-from torch.autograd import Variable
-from torchvision import transforms
-#from torchsummary import summary
+#from torch.autograd import Variable
+#from torchvision import transforms
+from torchsummary import summary
 from torch.utils.data.dataset import Dataset
 
-from model import Model
+from model import Simple
 from data import DataTrain, DataTest
 
 config = yaml.load(open('config.yaml', 'r'), Loader=yaml.FullLoader)
@@ -24,18 +25,28 @@ def train(train_loader, model, criterion, optimizer, epoch):
     total = 0
     for i, (input, target) in enumerate(train_loader):
         optimizer.zero_grad()
+        #summary(model, input.shape)
         outputs = model(input)
-        predicted = torch.argmax(outputs, 1)
-        loss = criterion(outputs, target)
+        predicted = torch.argmax(outputs, 2)
+        #print(target.shape)
+        #print(outputs.shape)
+
+        #print(target)
+        #print(F.one_hot(target, num_classes=7))
+        #print(outputs)
+        target_ohe = F.one_hot(target, num_classes=7)
+        loss = criterion(outputs, target_ohe)
 
         for index in range(len(input)):
-            if predicted[index] == target[index]:
+            #print(predicted[index])
+            #print(target[index])
+            if predicted[index] == target_ohe[index]:
                 correct += 1
             total += 1
 
         if i % 100 == 0:
             print("loss: ", loss.item())
-            print("label: ", target[0].item())
+            print("label: ", target_ohe[0].item())
             print("predicted: ", predicted[0].item())
 
         loss.backward()
@@ -65,19 +76,19 @@ def validate(val_loader, model, criterion):
 
 def save_checkpoint(state, best_one, filename='genre_checkpoint.pth.tar', filename2='genre_best.pth.tar'):
     torch.save(state, filename)
-    #best_one stores whether your current checkpoint is better than the previous checkpoint
     if best_one:
         shutil.copyfile(filename, filename2)
 
 n_epochs = config["num_epochs"]
 training_size = config["training_size"]
 num_classes = config["num_classes"]
-model = Model(num_classes)
+model = Simple(num_classes)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(),
                       lr=config["learning_rate"],
                       momentum=config["momentum"],
                       weight_decay=config["weight_decay"])
+
 train_dataset = DataTrain(training_size)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True)
 val_dataset = DataTest(training_size)
