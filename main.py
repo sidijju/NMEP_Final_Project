@@ -91,8 +91,8 @@ optimizer = optim.SGD(model.parameters(),
 
 train_dataset = DataTrain(training_size)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True)
-val_dataset = DataTest(training_size)
-val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=config["batch_size"], shuffle=True)
+#val_dataset = DataTest(training_size)
+#val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=config["batch_size"], shuffle=True)
 
 best_loss = 1
 for epoch in range(n_epochs):

@@ -65,8 +65,8 @@ def get_dataset():
     #nltk.download('wordnet')
 
     dataset = pd.read_csv("lyrics_data.csv")
-    genre = dataset['genre']
-    lyrics = dataset['lyrics']
+    genre = dataset['genre'].iloc[:512] # TODO: CHANGE BACK
+    lyrics = dataset['lyrics'].iloc[:512] # TODO: CHANGE BACK
 
     genre_values = dict() # contains how many of each genre there are
     genre_indicies = dict()
