@@ -25,30 +25,22 @@ def train(train_loader, model, criterion, optimizer, epoch):
     total = 0
     for i, (input, target) in enumerate(train_loader):
         optimizer.zero_grad()
-        #summary(model, input.shape)
         outputs = model(input)
-        predicted = torch.argmax(outputs, 2)
-        #print(target.shape)
-        #print(outputs.shape)
-
-        #print(target)
-        #print(F.one_hot(target, num_classes=7))
-        #print(outputs)
-        target_ohe = F.one_hot(target, num_classes=7)
-        loss = criterion(outputs, target_ohe)
+        predicted = torch.argmax(outputs, 1)
+        loss = criterion(outputs, target)
 
         for index in range(len(input)):
             #print(predicted[index])
             #print(target[index])
-            if predicted[index] == target_ohe[index]:
+            if predicted[index] == target[index]:
                 correct += 1
             total += 1
 
-        if i % 100 == 0:
+        '''if i % 100 == 0:
             print("loss: ", loss.item())
-            print("label: ", target_ohe[0].item())
+            print("label: ", target[0].item())
             print("predicted: ", predicted[0].item())
-
+        '''
         loss.backward()
         optimizer.step()
 
@@ -91,8 +83,8 @@ optimizer = optim.SGD(model.parameters(),
 
 train_dataset = DataTrain(training_size)
 train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=config["batch_size"], shuffle=True)
-#val_dataset = DataTest(training_size)
-#val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=config["batch_size"], shuffle=True)
+val_dataset = DataTest(training_size)
+val_loader = torch.utils.data.DataLoader(val_dataset, batch_size=config["batch_size"], shuffle=True)
 
 best_loss = 1
 for epoch in range(n_epochs):

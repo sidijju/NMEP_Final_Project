@@ -65,8 +65,12 @@ def get_dataset():
     #nltk.download('wordnet')
 
     dataset = pd.read_csv("lyrics_data.csv")
-    genre = dataset['genre'].iloc[:512] # TODO: CHANGE BACK
-    lyrics = dataset['lyrics'].iloc[:512] # TODO: CHANGE BACK
+    dataset = dataset.sample(frac=1).reset_index(drop=True)
+    genre = dataset['genre'].iloc[:1000] # TODO: Change back
+    lyrics = dataset['lyrics'].iloc[:1000] # TODO: Change back
+
+    #print(type(genre))
+    #print(type(lyrics))
 
     genre_values = dict() # contains how many of each genre there are
     genre_indicies = dict()
@@ -106,7 +110,7 @@ def get_dataset():
         preprocessed_lyrics.append(song)
 
     #print(genre_labels)
-    preprocessed_lyrics, genre_labels = sklearn.utils.shuffle(preprocessed_lyrics, genre_labels)
+    #preprocessed_lyrics, genre_labels = sklearn.utils.shuffle(preprocessed_lyrics, genre_labels)
 
     #print(np.array(preprocessed_lyrics).shape)
     #print(np.array(genre_labels).shape)
@@ -114,7 +118,7 @@ def get_dataset():
 
     return (preprocessed_lyrics, genre_labels)
 
-get_dataset()
+#get_dataset()
 
 class DataTrain(Dataset):
     def __init__(self, training_size):

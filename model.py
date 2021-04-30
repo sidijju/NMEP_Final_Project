@@ -13,18 +13,23 @@ class Simple(nn.Module):
 
 
     def forward(self, x):
-        print(x.shape)
+        #print(x.shape)
         x = self.embedding(x)
-        print(x.shape)
-        x, _ = self.lstm(x)
-        x = x.contiguous().view(-1, 32)
-        print(x.shape)
+        #print(x.shape)
+        x = x.permute(1, 0, 2)
+        #print(x.shape)
+        x, hidden = self.lstm(x)
+        #x = x.contiguous().view(-1, 32)
+        x = x[-1, :, :]
+        #print(x.shape)
+        
+        #print("hidden" + str(hidden.shape))
         x = self.dense1(x)
-        print(x.shape)
+        #print(x.shape)
         x = nn.functional.relu(x)
-        print(x.shape)
+        #print(x.shape)
         x = self.dense2(x)
-        print(x.shape)
+        #print(x.shape)
         return nn.functional.softmax(x, dim=1)
 
 class RNN_LSTM(nn.Module):
