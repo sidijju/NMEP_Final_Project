@@ -22,6 +22,9 @@ Accuracy: 25.69313909774436%
 SVM (kernel=poly)
 Accuracy: 23.543233082706767%
 
+RF (max_depth = 20)
+Accuracy: 29.041353383458645%
+
 Keras (LSTM, 20 epochs, All data)
 Training Accuracy: 53.88%, Test Accuracy: 35.42%
 
