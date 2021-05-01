@@ -196,5 +196,5 @@ y_test = y_test.to_numpy()
 #print(X_test.shape)
 #print(y_test.shape)
 
-model.fit(X_train, y_train, epochs=15)
+model.fit(X_train, y_train, validation_split = 0.1, shuffle = True, epochs=50)
 print("Accuracy: ", model.evaluate(X_test, y_test)[1])

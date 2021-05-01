@@ -23,16 +23,17 @@ class Simple(nn.Module):
         #x = x.contiguous().view(-1, 32)
         x = x[:, -1, :]
         #print(x.shape)
-        
+
         #print("hidden" + str(hidden.shape))
-        x = self.dropout(x)
         x = self.dense1(x)
+        x = self.dropout(x)
         #print(x.shape)
         x = nn.functional.relu(x)
         #print(x.shape)
         x = self.dense2(x)
         #print(x.shape)
-        return nn.functional.softmax(x, dim=1)
+        #return nn.functional.softmax(x, dim=1)
+        return x
 
 class RNN_LSTM(nn.Module):
 
