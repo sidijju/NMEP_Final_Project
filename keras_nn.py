@@ -146,6 +146,17 @@ def simple_model():
     model.add(Dense(units=7, activation='softmax'))
     return model
 
+def stacked_model():
+    model = Sequential()
+    model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
+    model.add(LSTM(32, return_sequences=True))
+    model.add(LSTM(32, return_sequences=True))
+    model.add(LSTM(32))
+    model.add(Dropout(0.5))
+    model.add(Dense(units=16, activation='relu'))
+    model.add(Dense(units=7, activation='softmax'))
+    return model
+
 def bidirectional_model():
     model = Sequential()
     model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
@@ -155,7 +166,7 @@ def bidirectional_model():
     model.add(Dense(units=7, activation='softmax'))
     return model
 
-def stacked_model():
+def stacked_bidirectional_model():
     model = Sequential()
     model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
     model.add(Bidirectional(LSTM(32, return_sequences=True)))
