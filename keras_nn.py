@@ -146,11 +146,7 @@ def simple_model():
     model.add(Dense(units=7, activation='softmax'))
     return model
 
-<<<<<<< HEAD
-def simple_stacked_model():
-=======
 def stacked_model():
->>>>>>> ccc46c2a579b28f7d9e0fc464382e2f339aff0a7
     model = Sequential()
     model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
     model.add(LSTM(32, return_sequences=True))
