@@ -128,7 +128,7 @@ from sklearn.metrics import f1_score
 #print(len(preprocessed_lyrics))
 #print(len(genre_labels))
 
-training_size = 0.7
+training_size = 0.75
 num_data = len(preprocessed_lyrics)
 X_train, X_test, y_train, y_test = preprocessed_lyrics[:int(num_data * training_size)], preprocessed_lyrics[int(num_data * training_size):], genre[:int(num_data * training_size)], genre[int(num_data * training_size):]
 
@@ -140,8 +140,10 @@ from keras.layers.embeddings import Embedding
 model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
 
 from keras.layers.recurrent import LSTM
-from keras.layers import Dense, Activation
-model.add(LSTM(32))
+from keras.layers import Dense, Activation, Bidirectional, Dropout
+#model.add(LSTM(32))
+model.add(Bidirectional(LSTM(32)))
+model.add(Dropout(0.5))
 model.add(Dense(units=16, activation='relu'))
 model.add(Dense(units=7, activation='softmax'))
 
@@ -156,10 +158,10 @@ X_test = np.array(X_test)
 y_train = y_train.to_numpy()
 y_test = y_test.to_numpy()
 
-print(X_train.shape)
-print(y_train.shape)
-print(X_test.shape)
-print(y_test.shape)
+#print(X_train.shape)
+#print(y_train.shape)
+#print(X_test.shape)
+#print(y_test.shape)
 
-model.fit(X_train, y_train, epochs=20)
+model.fit(X_train, y_train, epochs=15)
 print("Accuracy: ", model.evaluate(X_test, y_test)[1])
