@@ -21,3 +21,18 @@ Accuracy: 25.69313909774436%
 
 SVM (kernel=poly)
 Accuracy: 23.543233082706767%
+
+Keras (LSTM, 20 epochs, All data)
+Training Accuracy: 53.88%, Test Accuracy: 35.42%
+
+Keras (LSTM, 50 epochs, All data) - IN PROGRESS 7
+Training Accuracy: %, Test Accuracy: %
+
+Keras (Bidirectional LSTM, 50 epochs, All data)
+Training Accuracy: 62.98%, Test Accuracy: 32.99%
+
+Keras (Bidirectional + 3 Stacked, 15 epochs, Partial data)
+Training accuracy: 76.13%, Test Accuracy: 20%
+
+Keras (Bidirectional + 3 Stacked, 50 epochs, All data)
+Training Accuracy: 65.97%, Test Accuracy: 33.43%

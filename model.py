@@ -19,8 +19,9 @@ class Simple(nn.Module):
         #print(x.shape)
         #x = x.permute(1, 0, 2)
         #print(x.shape)
-        x, hidden = self.lstm(x)
+        x, hidden = self.lstm(x) # 512 x 200 x 32
         #x = x.contiguous().view(-1, 32)
+        #print(x.shape)
         x = x[:, -1, :]
         #print(x.shape)
         
@@ -32,7 +33,8 @@ class Simple(nn.Module):
         #print(x.shape)
         x = self.dense2(x)
         #print(x.shape)
-        return nn.functional.softmax(x, dim=1)
+        return x
+        #return nn.functional.softmax(x, dim=1)
 
 class RNN_LSTM(nn.Module):
 

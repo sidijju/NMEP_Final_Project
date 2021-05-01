@@ -146,6 +146,17 @@ def simple_model():
     model.add(Dense(units=7, activation='softmax'))
     return model
 
+def simple_stacked_model():
+    model = Sequential()
+    model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
+    model.add(LSTM(32, return_sequences=True))
+    model.add(LSTM(32, return_sequences=True))
+    model.add(LSTM(32))
+    model.add(Dropout(0.5))
+    model.add(Dense(units=16, activation='relu'))
+    model.add(Dense(units=7, activation='softmax'))
+    return model
+
 def bidirectional_model():
     model = Sequential()
     model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
@@ -167,7 +178,7 @@ def stacked_model():
     return model
 
 
-model = stacked_model()
+model = simple_stacked_model()
 
 import tensorflow as tf
 model.compile(loss=tf.keras.losses.categorical_crossentropy, optimizer="adam", metrics=['acc'])
@@ -185,5 +196,5 @@ y_test = y_test.to_numpy()
 #print(X_test.shape)
 #print(y_test.shape)
 
-model.fit(X_train, y_train, epochs=15)
+model.fit(X_train, y_train, epochs=50)
 print("Accuracy: ", model.evaluate(X_test, y_test)[1])

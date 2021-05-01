@@ -66,8 +66,8 @@ def get_dataset():
 
     dataset = pd.read_csv("lyrics_data.csv")
     dataset = dataset.sample(frac=1).reset_index(drop=True) # shuffle
-    genre = dataset['genre']#.iloc[:1000] # TODO: Change back
-    lyrics = dataset['lyrics']#.iloc[:1000] # TODO: Change back
+    genre = dataset['genre'].iloc[:1000] # TODO: Change back
+    lyrics = dataset['lyrics'].iloc[:1000] # TODO: Change back
 
     #print(type(genre))
     #print(type(lyrics))
