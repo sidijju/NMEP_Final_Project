@@ -25,7 +25,10 @@ Accuracy: 23.543233082706767%
 Keras (LSTM, 20 epochs, All data)
 Training Accuracy: 53.88%, Test Accuracy: 35.42%
 
-Keras (LSTM, 50 epochs, All data) - IN PROGRESS 7
+Keras (LSTM, 20 epochs, All data)
+Training Accuracy: 53.88%, Test Accuracy: 35.42%
+
+Keras (LSTM + 3 Stacked, 50 epochs, All data)
 Training Accuracy: %, Test Accuracy: %
 
 Keras (Bidirectional LSTM, 50 epochs, All data)
