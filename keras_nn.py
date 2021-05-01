@@ -146,7 +146,11 @@ def simple_model():
     model.add(Dense(units=7, activation='softmax'))
     return model
 
+<<<<<<< HEAD
 def simple_stacked_model():
+=======
+def stacked_model():
+>>>>>>> ccc46c2a579b28f7d9e0fc464382e2f339aff0a7
     model = Sequential()
     model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
     model.add(LSTM(32, return_sequences=True))
@@ -166,7 +170,7 @@ def bidirectional_model():
     model.add(Dense(units=7, activation='softmax'))
     return model
 
-def stacked_model():
+def stacked_bidirectional_model():
     model = Sequential()
     model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
     model.add(Bidirectional(LSTM(32, return_sequences=True)))
@@ -196,5 +200,5 @@ y_test = y_test.to_numpy()
 #print(X_test.shape)
 #print(y_test.shape)
 
-model.fit(X_train, y_train, epochs=50)
+model.fit(X_train, y_train, validation_split = 0.1, shuffle = True, epochs=50)
 print("Accuracy: ", model.evaluate(X_test, y_test)[1])

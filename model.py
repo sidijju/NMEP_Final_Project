@@ -24,10 +24,10 @@ class Simple(nn.Module):
         #print(x.shape)
         x = x[:, -1, :]
         #print(x.shape)
-        
+
         #print("hidden" + str(hidden.shape))
-        x = self.dropout(x)
         x = self.dense1(x)
+        x = self.dropout(x)
         #print(x.shape)
         x = nn.functional.relu(x)
         #print(x.shape)

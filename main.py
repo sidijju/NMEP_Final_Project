@@ -26,7 +26,8 @@ def train(train_loader, model, criterion, optimizer, epoch):
     for i, (input, target) in enumerate(train_loader):
         optimizer.zero_grad()
         outputs = model(input)
-        predicted = torch.argmax(outputs, 1)
+        logits = nn.functional.softmax(outputs, dim=1)
+        predicted = torch.argmax(logits, 1)
         loss = criterion(outputs, target)
 
         for index in range(len(input)):
@@ -36,11 +37,12 @@ def train(train_loader, model, criterion, optimizer, epoch):
                 correct += 1
             total += 1
 
-        '''if i % 100 == 0:
+        if i % 100 == 0:
             print("loss: ", loss.item())
             print("label: ", target[0].item())
             print("predicted: ", predicted[0].item())
-        '''
+            print("outputs:", logits[0])
+
         loss.backward()
         optimizer.step()
 
@@ -52,7 +54,8 @@ def validate(val_loader, model, criterion):
     total = 0
     for i, (input, target) in enumerate(val_loader):
         outputs = model(input)
-        predicted = torch.argmax(outputs, 1)
+        logits = nn.functional.softmax(outputs, dim=1)
+        predicted = torch.argmax(logits, 1)
         loss = criterion(outputs, target)
         for index in range(len(input)):
             if predicted[index] == target[index]:
