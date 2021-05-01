@@ -93,4 +93,4 @@ for epoch in range(n_epochs):
  	 # Save checkpoint
      best_one = val_loss < best_loss
      save_checkpoint(model.state_dict(), best_one)
-     print("Epoch %d - Train Accuracy: %2.4f, Validation Accuracy: %2.4f" % (epoch, train_acc, val_acc))
+     print("Epoch %d - Train Accuracy: %2.4f, Validation Accuracy: %2.4f" % (epoch + 1, train_acc, val_acc))

@@ -118,28 +118,28 @@ def get_dataset():
 
     return (preprocessed_lyrics, genre_labels)
 
-#get_dataset()
+preprocessed_lyrics, genre_labels = get_dataset()
 
-class DataTrain(Dataset):
-    def __init__(self, training_size):
-        self.data, self.labels = get_dataset()
-        self.data = self.data[0:int(len(self.data)*training_size)]
-        self.labels = self.labels[0:int(len(self.labels)*training_size)]
+from sklearn import svm, datasets
+import sklearn.model_selection as model_selection
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
 
-    def __getitem__(self, index):
-        return torch.tensor(self.data[index]), self.labels[index]
+#print(len(preprocessed_lyrics))
+#print(len(genre_labels))
 
-    def __len__(self):
-        return len(self.data)
+training_size = 0.7
+num_data = len(preprocessed_lyrics)
+X_train, X_test, y_train, y_test = preprocessed_lyrics[:int(num_data * training_size)], preprocessed_lyrics[int(num_data * training_size):], genre_labels[:int(num_data * training_size)], genre_labels[int(num_data * training_size):]
 
-class DataTest(Dataset):
-    def __init__(self, training_size):
-        self.data, self.labels = get_dataset()
-        self.data = self.data[int(len(self.data)*training_size):]
-        self.labels = self.labels[int(len(self.labels)*training_size):]
+rbf = svm.SVC(kernel='rbf')
+rbf.fit(X_train, y_train)
+rbf_pred = rbf.predict(X_test)
+rbf_accuracy = accuracy_score(y_test, rbf_pred)
+print("RBF Accuracy: " + str(rbf_accuracy * 100) + "%")
 
-    def __getitem__(self, index):
-        return torch.tensor(self.data[index]), self.labels[index]
-
-    def __len__(self):
-        return len(self.data)
+poly = svm.SVC(kernel='poly')
+poly.fit(X_train, y_train)
+poly_pred = poly.predict(X_test)
+poly_accuracy = accuracy_score(y_test, poly_pred)
+print("Poly Accuracy: " + str(poly_accuracy * 100) + "%")

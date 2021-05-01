@@ -82,12 +82,12 @@ def get_dataset():
         genre_values[value] += 1
 
     # One-hot encode
-    #genre = pd.get_dummies(genre)
+    genre = pd.get_dummies(genre)
 
     #print(genre_indicies)
-    genre_labels = []
-    for i in range(len(genre)):
-        genre_labels.append(genre_indicies[genre[i]])
+    #genre_labels = []
+    #for i in range(len(genre)):
+    #    genre_labels.append(genre_indicies[genre[i]])
 
     # lemmatize lyrics
     lyrics = lemmatize(lyrics)
@@ -116,30 +116,50 @@ def get_dataset():
     #print(np.array(genre_labels).shape)
     #print(genre_labels)
 
-    return (preprocessed_lyrics, genre_labels)
+    return (preprocessed_lyrics, genre)
 
-#get_dataset()
+preprocessed_lyrics, genre = get_dataset()
 
-class DataTrain(Dataset):
-    def __init__(self, training_size):
-        self.data, self.labels = get_dataset()
-        self.data = self.data[0:int(len(self.data)*training_size)]
-        self.labels = self.labels[0:int(len(self.labels)*training_size)]
+from sklearn import svm, datasets
+import sklearn.model_selection as model_selection
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import f1_score
 
-    def __getitem__(self, index):
-        return torch.tensor(self.data[index]), self.labels[index]
+#print(len(preprocessed_lyrics))
+#print(len(genre_labels))
 
-    def __len__(self):
-        return len(self.data)
+training_size = 0.7
+num_data = len(preprocessed_lyrics)
+X_train, X_test, y_train, y_test = preprocessed_lyrics[:int(num_data * training_size)], preprocessed_lyrics[int(num_data * training_size):], genre[:int(num_data * training_size)], genre[int(num_data * training_size):]
 
-class DataTest(Dataset):
-    def __init__(self, training_size):
-        self.data, self.labels = get_dataset()
-        self.data = self.data[int(len(self.data)*training_size):]
-        self.labels = self.labels[int(len(self.labels)*training_size):]
+import keras
+from keras import Sequential
+model = Sequential()
 
-    def __getitem__(self, index):
-        return torch.tensor(self.data[index]), self.labels[index]
+from keras.layers.embeddings import Embedding
+model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
 
-    def __len__(self):
-        return len(self.data)
+from keras.layers.recurrent import LSTM
+from keras.layers import Dense, Activation
+model.add(LSTM(32))
+model.add(Dense(units=16, activation='relu'))
+model.add(Dense(units=7, activation='softmax'))
+
+import tensorflow as tf
+model.compile(loss=tf.keras.losses.categorical_crossentropy, optimizer="adam", metrics=['acc'])
+
+#print(type(X_train))
+#print(type(y_train))
+
+X_train = np.array(X_train)
+X_test = np.array(X_test)
+y_train = y_train.to_numpy()
+y_test = y_test.to_numpy()
+
+print(X_train.shape)
+print(y_train.shape)
+print(X_test.shape)
+print(y_test.shape)
+
+model.fit(X_train, y_train, epochs=20)
+print("Accuracy: ", model.evaluate(X_test, y_test)[1])
