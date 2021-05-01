@@ -134,18 +134,40 @@ X_train, X_test, y_train, y_test = preprocessed_lyrics[:int(num_data * training_
 
 import keras
 from keras import Sequential
-model = Sequential()
-
 from keras.layers.embeddings import Embedding
-model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
-
 from keras.layers.recurrent import LSTM
 from keras.layers import Dense, Activation, Bidirectional, Dropout
-#model.add(LSTM(32))
-model.add(Bidirectional(LSTM(32)))
-model.add(Dropout(0.5))
-model.add(Dense(units=16, activation='relu'))
-model.add(Dense(units=7, activation='softmax'))
+
+def simple_model():
+    model = Sequential()
+    model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
+    model.add(LSTM(32))
+    model.add(Dense(units=16, activation='relu'))
+    model.add(Dense(units=7, activation='softmax'))
+    return model
+
+def bidirectional_model():
+    model = Sequential()
+    model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
+    model.add(Bidirectional(LSTM(32)))
+    model.add(Dropout(0.5))
+    model.add(Dense(units=16, activation='relu'))
+    model.add(Dense(units=7, activation='softmax'))
+    return model
+
+def stacked_model():
+    model = Sequential()
+    model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
+    model.add(Bidirectional(LSTM(32, return_sequences=True)))
+    model.add(Bidirectional(LSTM(32, return_sequences=True)))
+    model.add(Bidirectional(LSTM(32)))
+    model.add(Dropout(0.5))
+    model.add(Dense(units=16, activation='relu'))
+    model.add(Dense(units=7, activation='softmax'))
+    return model
+
+
+model = stacked_model()
 
 import tensorflow as tf
 model.compile(loss=tf.keras.losses.categorical_crossentropy, optimizer="adam", metrics=['acc'])
