@@ -142,6 +142,7 @@ def simple_model():
     model = Sequential()
     model.add(Embedding(1000, 32, input_length=200, mask_zero=True))
     model.add(LSTM(32))
+    model.add(Dropout(0.5))
     model.add(Dense(units=16, activation='relu'))
     model.add(Dense(units=7, activation='softmax'))
     return model
@@ -178,7 +179,7 @@ def stacked_bidirectional_model():
     return model
 
 
-model = simple_stacked_model()
+model = simple_model()
 
 import tensorflow as tf
 model.compile(loss=tf.keras.losses.categorical_crossentropy, optimizer="adam", metrics=['acc'])
