@@ -1,0 +1,44 @@
+LSTM (1 layer, dropout=0.7)
+Best: 24% (Epoch 13), 100 epochs: 24%
+Best: 8% (Epoch 1), 71 epochs: 8%
+
+LSTM (5 layers, dropout=0.7)
+Best: 26.33% (Epoch 3), 90 epochs: 9.33%
+Best: 17.67% (Epoch 1), 66 epochs: 2.67%
+
+LSTM (2 layers, dropout=0.7)
+Best: 12.67% (Epoch 4), 100 epochs: 12.67%
+Best: 15% (Epoch 4), 65 epochs: 13.67%
+
+LSTM (20 layers, dropout=0.7)
+Best: 26% (Epoch 23), 33 epochs: 26%
+
+LSTM (20 layers, dropout=0.7, all data): IN PROGRESS
+Best: 18.69% (Epoch 1), 51 epochs: 18.69%
+
+SVM (kernel=rbf)
+Accuracy: 25.69313909774436%
+
+SVM (kernel=poly)
+Accuracy: 23.543233082706767%
+
+RF (max_depth = 20)
+Accuracy: 29.041353383458645%
+
+Keras (LSTM, 20 epochs, All data)
+Training Accuracy: 53.88%, Test Accuracy: 35.42%
+
+Keras (LSTM, 50 epochs, All data) - IN PROGRESS 7
+Training Accuracy: %, Test Accuracy: %
+
+Keras (LSTM + 3 Stacked, 50 epochs, All data)
+Training Accuracy: 62.56%, Test Accuracy: 33.03%
+
+Keras (Bidirectional LSTM, 50 epochs, All data)
+Training Accuracy: 62.98%, Test Accuracy: 32.99%
+
+Keras (Bidirectional + 3 Stacked, 15 epochs, Partial data)
+Training accuracy: 76.13%, Test Accuracy: 20%
+
+Keras (Bidirectional + 3 Stacked, 50 epochs, All data)
+Training Accuracy: 65.97%, Test Accuracy: 33.43%
